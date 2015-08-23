@@ -42,10 +42,10 @@ public class Adapter_TorrDownLoc extends ArrayAdapter<String> implements Interfa
             @Override
             public void onClick(View view) {
                 Toast.makeText(getContext(), getItem(position).toString(), Toast.LENGTH_SHORT).show();
-                Network_TorrMagLinkFetch magLink = new Network_TorrMagLinkFetch(getContext(), getItem(position).toString());
+                Network_TorrMagLinkFetch magLink = new Network_TorrMagLinkFetch(getContext());
 
                 magLink.delegate = Adapter_TorrDownLoc.this;
-                magLink.execute();
+                magLink.fetch("http://torrentr-1038.appspot.com/jresp.jsp?maglink="+getItem(position).toString());
             }
         });
         try {
