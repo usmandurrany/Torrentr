@@ -9,7 +9,7 @@ import android.os.Bundle;
 /**
  * Created by Usman on 7/11/2014.
  */
-public class TorrDialog extends DialogFragment {
+public class Dialog_TorrInfo extends DialogFragment {
 
     AlertDialog.Builder builder;
 

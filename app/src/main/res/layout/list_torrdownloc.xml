@@ -4,29 +4,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
         android:paddingTop="5dp">
+
         <TextView
             android:id="@+id/torr_sites"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
 
-            android:text="Medium Text"
             android:layout_alignParentLeft="true"
+            android:text="Medium Text"
             android:textAppearance="?android:attr/textAppearanceMedium" />
+
         <ImageView
             android:id="@+id/magnetlink"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:background="@drawable/mag"
-            android:layout_alignParentRight="true"        />
+            android:layout_alignParentRight="true"
+            android:background="@drawable/mag" />
 
     </RelativeLayout>
-
 
 
 </LinearLayout>

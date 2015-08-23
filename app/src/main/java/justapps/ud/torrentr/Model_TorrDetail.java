@@ -1,11 +1,9 @@
 package justapps.ud.torrentr;
 
-import android.content.Context;
-
 /**
  * Created by Usman-Durrani on 8/14/2015.
  */
-public class Model_TorrentDetail {
+public class Model_TorrDetail {
     public String title;
     public String size;
     public String date;
@@ -15,7 +13,7 @@ public class Model_TorrentDetail {
     public String links;
 
     // Create a constructor
-    public Model_TorrentDetail(String title, String size, String date, String verify, String seeds, String leeches, String links) {
+    public Model_TorrDetail(String title, String size, String date, String verify, String seeds, String leeches, String links) {
         this.title = title;
         this.size = size;
         this.date = date;

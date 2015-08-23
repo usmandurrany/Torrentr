@@ -1,10 +1,11 @@
 package justapps.ud.torrentr;
+
 import android.content.res.Configuration;
+import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,26 +25,26 @@ import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;
 
-public class Activity_TorrentrMain extends ActionBarActivity implements Interface_TorrentFunctions {
+public class Activity_TorrMain extends ActionBarActivity implements Interface_TorrFunc {
 
+    //ListView TorrList;
+    RecyclerView TorrList;
+    Network_TorrListFetch_OLD gettorrlist;
+    ImageView btnSearch;
+    EditText txtSearch;
+    FloatingActionButton FABsearch;
+    SwipeRefreshLayout mSwipeRefreshLayout;
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;
     private ListView leftDrawerList;
     private ArrayAdapter<String> navigationDrawerAdapter;
-    private String[] leftSliderData = {"All Latest", "Movies", "Music", "Games", "Softwares","TV Shows", "Settings"};
-    //ListView TorrList;
-    RecyclerView TorrList;
-    getTorrList gettorrlist;
-    ImageView btnSearch;
-    EditText txtSearch;
-    FloatingActionButton FABsearch;
-    SwipeRefreshLayout mSwipeRefreshLayout;
+    private String[] leftSliderData = {"All Latest", "Movies", "Music", "Games", "Softwares", "TV Shows", "Settings"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_torrentr_main);
+        setContentView(R.layout.activity_torrmain);
         nitView();
 
 
@@ -52,17 +53,16 @@ public class Activity_TorrentrMain extends ActionBarActivity implements Interfac
             setSupportActionBar(toolbar);
         }
         //TorrList = (ListView) this.findViewById(R.id.TorrList);
-        TorrList = (RecyclerView)this.findViewById(R.id.TorrList);
+        TorrList = (RecyclerView) this.findViewById(R.id.TorrList);
         FABsearch = (FloatingActionButton) findViewById(R.id.fabsearch);
         FABsearch.attachToRecyclerView(TorrList);
 
-        torrListReq torrlistreq = new torrListReq(Activity_TorrentrMain.this);
+        Network_TorrListFetch torrlistreq = new Network_TorrListFetch(Activity_TorrMain.this);
         torrlistreq.delegate = this;
         torrlistreq.fetch();
 
 
-
-        gettorrlist = new getTorrList(this, "http://torrentz.eu/verified");
+        gettorrlist = new Network_TorrListFetch_OLD(this, "http://torrentz.eu/verified");
         gettorrlist.delegate = this;
         //gettorrlist.execute();
 
@@ -74,30 +74,14 @@ public class Activity_TorrentrMain extends ActionBarActivity implements Interfac
             @Override
             public void onRefresh() {
                 //Refreshing data on server
-                gettorrlist = new getTorrList(Activity_TorrentrMain.this, "http://torrentz.eu/verified");
-                gettorrlist.delegate = Activity_TorrentrMain.this;
+                gettorrlist = new Network_TorrListFetch_OLD(Activity_TorrMain.this, "http://torrentz.eu/verified");
+                gettorrlist.delegate = Activity_TorrMain.this;
                 gettorrlist.execute();
             }
         });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
-
 
 
     private void nitView() {
@@ -105,7 +89,7 @@ public class Activity_TorrentrMain extends ActionBarActivity implements Interfac
         leftDrawerList = (ListView) findViewById(R.id.left_drawer);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-        navigationDrawerAdapter=new ArrayAdapter<String>( Activity_TorrentrMain.this, android.R.layout.simple_list_item_1, leftSliderData);
+        navigationDrawerAdapter = new ArrayAdapter<String>(Activity_TorrMain.this, android.R.layout.simple_list_item_1, leftSliderData);
         leftDrawerList.setAdapter(navigationDrawerAdapter);
 
     }
@@ -145,18 +129,19 @@ public class Activity_TorrentrMain extends ActionBarActivity implements Interfac
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.torrentr_main, menu);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
-        final MenuItem searchMenuItem = menu.findItem( R.id.action_search );
+        final MenuItem searchMenuItem = menu.findItem(R.id.action_search);
         searchMenuItem.setVisible(false);
         FABsearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                searchMenuItem.expandActionView();            }
+                searchMenuItem.expandActionView();
+            }
         });
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                getTorrList searchTorr = new getTorrList(Activity_TorrentrMain.this, "http://torrentz.eu/search?f=" + s.replaceAll("\\s", "+"));
-                searchTorr.delegate = Activity_TorrentrMain.this;
+                Network_TorrListFetch_OLD searchTorr = new Network_TorrListFetch_OLD(Activity_TorrMain.this, "http://torrentz.eu/search?f=" + s.replaceAll("\\s", "+"));
+                searchTorr.delegate = Activity_TorrMain.this;
                 searchTorr.execute();
                 return false;
             }
@@ -169,7 +154,7 @@ public class Activity_TorrentrMain extends ActionBarActivity implements Interfac
         searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean queryTextFocused) {
-                if(!queryTextFocused) {
+                if (!queryTextFocused) {
                     searchMenuItem.collapseActionView();
                     searchView.setQuery("", false);
                 }
@@ -194,63 +179,63 @@ public class Activity_TorrentrMain extends ActionBarActivity implements Interfac
 
     private void addListenerOnButton() {
 
-           leftDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        leftDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
-                        gettorrlist = new getTorrList(Activity_TorrentrMain.this, "http://torrentz.eu/verified");
-                        gettorrlist.delegate = Activity_TorrentrMain.this;
+                        gettorrlist = new Network_TorrListFetch_OLD(Activity_TorrMain.this, "http://torrentz.eu/verified");
+                        gettorrlist.delegate = Activity_TorrMain.this;
                         gettorrlist.execute();
                         drawerLayout.closeDrawers();
                         break;
                     case 1:
-                        gettorrlist = new getTorrList(Activity_TorrentrMain.this, "http://torrentz.eu/verified?f=movies");
-                        gettorrlist.delegate = Activity_TorrentrMain.this;
+                        gettorrlist = new Network_TorrListFetch_OLD(Activity_TorrMain.this, "http://torrentz.eu/verified?f=movies");
+                        gettorrlist.delegate = Activity_TorrMain.this;
                         gettorrlist.execute();
                         drawerLayout.closeDrawers();
                         break;
                     case 2:
-                        gettorrlist = new getTorrList(Activity_TorrentrMain.this, "http://torrentz.eu/verified?f=music");
-                        gettorrlist.delegate = Activity_TorrentrMain.this;
+                        gettorrlist = new Network_TorrListFetch_OLD(Activity_TorrMain.this, "http://torrentz.eu/verified?f=music");
+                        gettorrlist.delegate = Activity_TorrMain.this;
                         gettorrlist.execute();
                         drawerLayout.closeDrawers();
                         break;
                     case 3:
-                        gettorrlist = new getTorrList(Activity_TorrentrMain.this, "http://torrentz.eu/verified?f=games");
-                        gettorrlist.delegate = Activity_TorrentrMain.this;
+                        gettorrlist = new Network_TorrListFetch_OLD(Activity_TorrMain.this, "http://torrentz.eu/verified?f=games");
+                        gettorrlist.delegate = Activity_TorrMain.this;
                         gettorrlist.execute();
                         break;
                     case 4:
-                        gettorrlist = new getTorrList(Activity_TorrentrMain.this, "http://torrentz.eu/verified?f=apps");
-                        gettorrlist.delegate = Activity_TorrentrMain.this;
+                        gettorrlist = new Network_TorrListFetch_OLD(Activity_TorrMain.this, "http://torrentz.eu/verified?f=apps");
+                        gettorrlist.delegate = Activity_TorrMain.this;
                         gettorrlist.execute();
                         drawerLayout.closeDrawers();
                         break;
                     case 5:
-                        gettorrlist = new getTorrList(Activity_TorrentrMain.this, "http://torrentz.eu/verified?f=tv");
-                        gettorrlist.delegate = Activity_TorrentrMain.this;
+                        gettorrlist = new Network_TorrListFetch_OLD(Activity_TorrMain.this, "http://torrentz.eu/verified?f=tv");
+                        gettorrlist.delegate = Activity_TorrMain.this;
                         gettorrlist.execute();
                         drawerLayout.closeDrawers();
                         break;
                     default:
-                        gettorrlist = new getTorrList(Activity_TorrentrMain.this, "http://torrentz.eu/verified");
-                        gettorrlist.delegate = Activity_TorrentrMain.this;
+                        gettorrlist = new Network_TorrListFetch_OLD(Activity_TorrMain.this, "http://torrentz.eu/verified");
+                        gettorrlist.delegate = Activity_TorrMain.this;
                         gettorrlist.execute();
                         drawerLayout.closeDrawers();
                         break;
 
                 }
-                Toast.makeText(Activity_TorrentrMain.this, navigationDrawerAdapter.getItem(position), Toast.LENGTH_LONG).show();
+                Toast.makeText(Activity_TorrMain.this, navigationDrawerAdapter.getItem(position), Toast.LENGTH_LONG).show();
 
             }
         });
        /* TorrList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Intent TorrDetail = new Intent(Activity_TorrentrMain.this, Activity_TorrentrDetails.class);
+                Intent TorrDetail = new Intent(Activity_TorrMain.this, Activity_TorrDetails.class);
                 TorrDetail.putExtra("torrLink", adapter.getItem(position));
                 startActivity(TorrDetail);
-               // Activity_TorrentrMain.this.overridePendingTransition(R.anim.slide_in_right,
+               // Activity_TorrMain.this.overridePendingTransition(R.anim.slide_in_right,
                         //R.anim.slide_out_left);
 
 
@@ -259,16 +244,15 @@ public class Activity_TorrentrMain extends ActionBarActivity implements Interfac
     }
 
 
-
     @Override
-    public void resultTitle(ArrayList<Model_TorrentDetail> Model_TorrentDetail) {
-        Adapter_TorrListRecycler adapter = new Adapter_TorrListRecycler(this, Model_TorrentDetail);
+    public void resultTitle(ArrayList<Model_TorrDetail> Model_TorrDetail) {
+        Adapter_TorrListRecycler adapter = new Adapter_TorrListRecycler(this, Model_TorrDetail);
         TorrList.setAdapter(adapter);
         TorrList.setLayoutManager(new LinearLayoutManager(this));
         adapter.notifyDataSetChanged();
-       // if (mSwipeRefreshLayout.isRefreshing()) {
-       //     mSwipeRefreshLayout.setRefreshing(false);
-       // }
+        // if (mSwipeRefreshLayout.isRefreshing()) {
+        //     mSwipeRefreshLayout.setRefreshing(false);
+        // }
 
     }
 

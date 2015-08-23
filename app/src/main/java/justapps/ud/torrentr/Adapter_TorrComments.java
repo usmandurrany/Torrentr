@@ -11,27 +11,28 @@ import android.widget.TextView;
 /**
  * Created by Usman on 7/9/2014.
  */
-public class TorrContentsAdapter extends ArrayAdapter<String> {
+public class Adapter_TorrComments extends ArrayAdapter<String> {
     private final Context context;
-    private final String[] contents;
+    private final String[] comments;
 
 
-    public TorrContentsAdapter(Context context, String[] contents) {
-        super(context, R.layout.torr_contents_list, contents);
+    public Adapter_TorrComments(Context context, String[] comments) {
+        super(context, R.layout.list_torrcomments, comments);
         this.context = context;
-        this.contents = contents;
+        this.comments = comments;
+
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(R.layout.torr_contents_list, parent, false);
-        TextView torrContents = (TextView) rowView.findViewById(R.id.torr_file);
+        View rowView = inflater.inflate(R.layout.list_torrcomments, parent, false);
+        TextView torrComments = (TextView) rowView.findViewById(R.id.torr_comments);
 
         try {
 
-            torrContents.setText(contents[position]);
+            torrComments.setText(comments[position]);
 
         } catch (ArrayIndexOutOfBoundsException e) {
             Log.e("Error ", e.toString());
@@ -42,4 +43,5 @@ public class TorrContentsAdapter extends ArrayAdapter<String> {
 
         return rowView;
     }
+
 }

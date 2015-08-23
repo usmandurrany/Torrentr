@@ -19,11 +19,11 @@ import java.net.URL;
 import java.util.ArrayList;
 
 
-class getTorrList extends AsyncTask<String, Void, String> {
+class Network_TorrListFetch_OLD extends AsyncTask<String, Void, String> {
 
     private final String url;
     private final Context context;
-    public Interface_TorrentFunctions delegate;
+    public Interface_TorrFunc delegate;
     String[] sizes;
     String[] titles;
     String[] dates;
@@ -36,12 +36,7 @@ class getTorrList extends AsyncTask<String, Void, String> {
     Document doc;
 
 
-
-
-
-
-
-    public getTorrList(Context context, String url) {
+    public Network_TorrListFetch_OLD(Context context, String url) {
         this.context = context;
         this.url = url;
     }
@@ -99,8 +94,7 @@ class getTorrList extends AsyncTask<String, Void, String> {
         leeches = new String[getLeeches.size()];
         links = new String[getLinks.size()];
 
-        ArrayList<Model_TorrentDetail> items = new ArrayList<>();
-
+        ArrayList<Model_TorrDetail> items = new ArrayList<>();
 
 
         for (int i = 0; i < getTitle.size(); i++) {
@@ -112,11 +106,11 @@ class getTorrList extends AsyncTask<String, Void, String> {
             leeches[i] = getLeeches.get(i).text();
             links[i] = getLinks.get(i).attr("href");
             //Log.e("Links: ",links[i].toString());*/
-           items.add(new Model_TorrentDetail(getTitle.get(i).text(), getSize.get(i).text(),getDate.get(i).text(),getVerified.get(i).text(),getSeeds.get(i).text(),getLeeches.get(i).text(),getLinks.get(i).attr("href")));
+            items.add(new Model_TorrDetail(getTitle.get(i).text(), getSize.get(i).text(), getDate.get(i).text(), getVerified.get(i).text(), getSeeds.get(i).text(), getLeeches.get(i).text(), getLinks.get(i).attr("href")));
 
         }
 
-       // items.add(new Model_TorrentDetail("Usman", "Size10","today","v1","2","20","www.google.com"));
+        // items.add(new Model_TorrDetail("Usman", "Size10","today","v1","2","20","www.google.com"));
 
         /*for (int i = 0; i < getSize.size(); i++)
         for (int i = 0; i < getDate.size(); i++)

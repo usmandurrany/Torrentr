@@ -17,14 +17,14 @@ import java.util.ArrayList;
 /**
  * Created by Usman on 7/9/2014.
  */
-public class TorrSitesAdapter extends ArrayAdapter<String> implements Interface_TorrentFunctions {
+public class Adapter_TorrDownLoc extends ArrayAdapter<String> implements Interface_TorrFunc {
     private final Context context;
     private final String[] sites;
     private final String[] links;
 
 
-    public TorrSitesAdapter(Context context, String[] sites, String[] links) {
-        super(context, R.layout.torr_sites_list, sites);
+    public Adapter_TorrDownLoc(Context context, String[] sites, String[] links) {
+        super(context, R.layout.list_torrdownloc, sites);
         this.context = context;
         this.sites = sites;
         this.links = links;
@@ -34,7 +34,7 @@ public class TorrSitesAdapter extends ArrayAdapter<String> implements Interface_
     public View getView(final int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(R.layout.torr_sites_list, parent, false);
+        View rowView = inflater.inflate(R.layout.list_torrdownloc, parent, false);
         TextView torrSites = (TextView) rowView.findViewById(R.id.torr_sites);
         ImageView magnet = (ImageView) rowView.findViewById(R.id.magnetlink);
 
@@ -42,9 +42,9 @@ public class TorrSitesAdapter extends ArrayAdapter<String> implements Interface_
             @Override
             public void onClick(View view) {
                 Toast.makeText(getContext(), getItem(position).toString(), Toast.LENGTH_SHORT).show();
-                getTorrMagLink magLink = new getTorrMagLink(getContext(), getItem(position).toString());
+                Network_TorrMagLinkFetch magLink = new Network_TorrMagLinkFetch(getContext(), getItem(position).toString());
 
-                magLink.delegate = TorrSitesAdapter.this;
+                magLink.delegate = Adapter_TorrDownLoc.this;
                 magLink.execute();
             }
         });
@@ -67,9 +67,8 @@ public class TorrSitesAdapter extends ArrayAdapter<String> implements Interface_
     }
 
 
-
     @Override
-    public void resultTitle(ArrayList<Model_TorrentDetail> Model_TorrentDetail) {
+    public void resultTitle(ArrayList<Model_TorrDetail> Model_TorrDetail) {
 
     }
 

@@ -17,8 +17,8 @@ import java.util.ArrayList;
 /**
  * Created by Usman on 7/9/2014.
  */
-public class Activity_TorrentrDetails extends Activity implements Interface_TorrentFunctions {
-    TorrSitesAdapter sitesAdapter;
+public class Activity_TorrDetails extends Activity implements Interface_TorrFunc {
+    Adapter_TorrDownLoc sitesAdapter;
 
     ListView sites;
     //ImageView magnet;
@@ -34,14 +34,14 @@ public class Activity_TorrentrDetails extends Activity implements Interface_Torr
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_torr_detail);
+        setContentView(R.layout.activity_torrdetails);
         String torrLink = getIntent().getStringExtra("torrLink");
-        getTorrDetail TorrDetail = new getTorrDetail(this, "http://torrentz.eu" + torrLink);
+        Network_TorrDetFetch TorrDetail = new Network_TorrDetFetch(this, "http://torrentz.eu" + torrLink);
         sites = (ListView) findViewById(R.id.dl_sites);
         cCount = (TextView) findViewById(R.id.cmntCount);
 
 
-                TorrDetail.delegate = this;
+        TorrDetail.delegate = this;
         TorrDetail.execute();
         addListenerOnButton();
         dialogBundle = new Bundle();
@@ -71,13 +71,13 @@ public class Activity_TorrentrDetails extends Activity implements Interface_Torr
 
 
     @Override
-    public void resultTitle(ArrayList<Model_TorrentDetail> Model_TorrentDetail) {
+    public void resultTitle(ArrayList<Model_TorrDetail> Model_TorrDetail) {
 
     }
 
     @Override
     public void TorrDetail(String[] sites, String[] contents, String[] comments, String[] links) {
-        sitesAdapter = new TorrSitesAdapter(Activity_TorrentrDetails.this, sites, links);
+        sitesAdapter = new Adapter_TorrDownLoc(Activity_TorrDetails.this, sites, links);
         cCount.setText(String.valueOf(comments.length));
         this.sites.setAdapter(sitesAdapter);
         this.comments = comments;
@@ -98,7 +98,7 @@ public class Activity_TorrentrDetails extends Activity implements Interface_Torr
         btncomments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DialogFragment dialog = new TorrDialog();
+                DialogFragment dialog = new Dialog_TorrInfo();
                 dialogBundle.putCharSequenceArray("data", comments);
                 dialogBundle.putString("Title", "Comments");
                 dialog.setArguments(dialogBundle);
@@ -109,7 +109,7 @@ public class Activity_TorrentrDetails extends Activity implements Interface_Torr
         btncontents.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DialogFragment dialog = new TorrDialog();
+                DialogFragment dialog = new Dialog_TorrInfo();
                 dialogBundle.putCharSequenceArray("data", contents);
                 dialogBundle.putString("Title", "Contents");
                 dialog.setArguments(dialogBundle);

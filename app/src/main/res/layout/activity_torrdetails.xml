@@ -4,8 +4,8 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:weightSum="2"
-    android:transitionName="torrselected">
+    android:transitionName="torrselected"
+    android:weightSum="2">
 
     <RelativeLayout
         android:layout_width="match_parent"

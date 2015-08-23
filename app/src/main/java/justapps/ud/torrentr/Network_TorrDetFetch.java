@@ -16,11 +16,11 @@ import java.net.URL;
 /**
  * Created by Usman on 7/9/2014.
  */
-public class getTorrDetail extends AsyncTask<String, Void, String> {
+public class Network_TorrDetFetch extends AsyncTask<String, Void, String> {
 
     private final String url;
     private final Context context;
-    public Interface_TorrentFunctions delegate;
+    public Interface_TorrFunc delegate;
     String[] sites;
     String[] contents;
     String[] comments;
@@ -30,7 +30,7 @@ public class getTorrDetail extends AsyncTask<String, Void, String> {
     Document doc;
 
 
-    public getTorrDetail(Context context, String url) {
+    public Network_TorrDetFetch(Context context, String url) {
         this.context = context;
         this.url = url;
     }

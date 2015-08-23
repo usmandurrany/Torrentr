@@ -9,10 +9,8 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,14 +21,14 @@ import java.util.ArrayList;
 /**
  * Created by Usman-Durrani on 8/22/2015.
  */
-public class torrListReq {
-    public Interface_TorrentFunctions delegate;
+public class Network_TorrListFetch {
+    public Interface_TorrFunc delegate;
     String url = "http://torrentr-1038.appspot.com/jresp.jsp?cat=ebooks";
     String site = "null";
     Context mContext;
-    ArrayList<Model_TorrentDetail> items = new ArrayList<>();
+    ArrayList<Model_TorrDetail> items = new ArrayList<>();
 
-    public torrListReq(Context context) {
+    public Network_TorrListFetch(Context context) {
         mContext = context;
     }
 
@@ -46,7 +44,7 @@ public class torrListReq {
                     response = response.getJSONObject("ebooks");
 //                    Toast.makeText(mContext,response.length(),Toast.LENGTH_SHORT).show();
                     for (int i = 0; i < response.length(); i++) {
-                        items.add(new Model_TorrentDetail(response.getJSONObject(Integer.toString(i)).getString("Name"),
+                        items.add(new Model_TorrDetail(response.getJSONObject(Integer.toString(i)).getString("Name"),
                                 response.getJSONObject(Integer.toString(i)).getJSONObject("Details").getString("Size"),
                                 response.getJSONObject(Integer.toString(i)).getJSONObject("Details").getString("Date"),
                                 response.getJSONObject(Integer.toString(i)).getJSONObject("Details").getString("Verif"),
