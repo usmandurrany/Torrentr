@@ -27,9 +27,8 @@ import java.util.ArrayList;
 
 public class Activity_TorrMain extends ActionBarActivity implements Interface_TorrFunc {
 
-    //ListView TorrList;
+    String currCat="all";
     RecyclerView TorrList;
-    Network_TorrListFetch_OLD gettorrlist;
     ImageView btnSearch;
     EditText txtSearch;
     FloatingActionButton FABsearch;
@@ -39,7 +38,8 @@ public class Activity_TorrMain extends ActionBarActivity implements Interface_To
     private ActionBarDrawerToggle drawerToggle;
     private ListView leftDrawerList;
     private ArrayAdapter<String> navigationDrawerAdapter;
-    private String[] leftSliderData = {"All Latest", "Movies", "Music", "Games", "Softwares", "TV Shows", "Settings"};
+    private String[] leftSliderData = {"All Latest", "Movies", "Music", "Games", "Softwares", "TV Shows", "eBooks","Settings"};
+    Network_TorrListFetch torrlistreq = new Network_TorrListFetch(Activity_TorrMain.this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,14 +57,9 @@ public class Activity_TorrMain extends ActionBarActivity implements Interface_To
         FABsearch = (FloatingActionButton) findViewById(R.id.fabsearch);
         FABsearch.attachToRecyclerView(TorrList);
 
-        Network_TorrListFetch torrlistreq = new Network_TorrListFetch(Activity_TorrMain.this);
         torrlistreq.delegate = this;
-        torrlistreq.fetch();
+        torrlistreq.fetch("http://torrentr-1038.appspot.com/jresp.jsp?cat=all","all");
 
-
-        gettorrlist = new Network_TorrListFetch_OLD(this, "http://torrentz.eu/verified");
-        gettorrlist.delegate = this;
-        //gettorrlist.execute();
 
 
         addListenerOnButton();
@@ -74,9 +69,8 @@ public class Activity_TorrMain extends ActionBarActivity implements Interface_To
             @Override
             public void onRefresh() {
                 //Refreshing data on server
-                gettorrlist = new Network_TorrListFetch_OLD(Activity_TorrMain.this, "http://torrentz.eu/verified");
-                gettorrlist.delegate = Activity_TorrMain.this;
-                gettorrlist.execute();
+                torrlistreq.delegate = Activity_TorrMain.this;
+                torrlistreq.fetch("http://torrentr-1038.appspot.com/jresp.jsp?cat="+currCat,currCat);
             }
         });
 
@@ -140,9 +134,10 @@ public class Activity_TorrMain extends ActionBarActivity implements Interface_To
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                Network_TorrListFetch_OLD searchTorr = new Network_TorrListFetch_OLD(Activity_TorrMain.this, "http://torrentz.eu/search?f=" + s.replaceAll("\\s", "+"));
-                searchTorr.delegate = Activity_TorrMain.this;
-                searchTorr.execute();
+                String searchQuery=s.replaceAll("\\s", "+");
+                torrlistreq.delegate = Activity_TorrMain.this;
+                torrlistreq.fetch("http://torrentr-1038.appspot.com/jresp.jsp?search=" + searchQuery, s);
+
                 return false;
             }
 
@@ -183,44 +178,44 @@ public class Activity_TorrMain extends ActionBarActivity implements Interface_To
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
-                        gettorrlist = new Network_TorrListFetch_OLD(Activity_TorrMain.this, "http://torrentz.eu/verified");
-                        gettorrlist.delegate = Activity_TorrMain.this;
-                        gettorrlist.execute();
+                        torrlistreq.delegate = Activity_TorrMain.this;
+                        torrlistreq.fetch("http://torrentr-1038.appspot.com/jresp.jsp?cat=all","all");
                         drawerLayout.closeDrawers();
                         break;
                     case 1:
-                        gettorrlist = new Network_TorrListFetch_OLD(Activity_TorrMain.this, "http://torrentz.eu/verified?f=movies");
-                        gettorrlist.delegate = Activity_TorrMain.this;
-                        gettorrlist.execute();
+                        torrlistreq.delegate = Activity_TorrMain.this;
+                        torrlistreq.fetch("http://torrentr-1038.appspot.com/jresp.jsp?cat=movies","movies");
                         drawerLayout.closeDrawers();
                         break;
                     case 2:
-                        gettorrlist = new Network_TorrListFetch_OLD(Activity_TorrMain.this, "http://torrentz.eu/verified?f=music");
-                        gettorrlist.delegate = Activity_TorrMain.this;
-                        gettorrlist.execute();
+                        torrlistreq.delegate = Activity_TorrMain.this;
+                        torrlistreq.fetch("http://torrentr-1038.appspot.com/jresp.jsp?cat=music","music");
                         drawerLayout.closeDrawers();
                         break;
                     case 3:
-                        gettorrlist = new Network_TorrListFetch_OLD(Activity_TorrMain.this, "http://torrentz.eu/verified?f=games");
-                        gettorrlist.delegate = Activity_TorrMain.this;
-                        gettorrlist.execute();
+                        torrlistreq.delegate = Activity_TorrMain.this;
+                        torrlistreq.fetch("http://torrentr-1038.appspot.com/jresp.jsp?cat=games","games");
+                        drawerLayout.closeDrawers();
+
                         break;
                     case 4:
-                        gettorrlist = new Network_TorrListFetch_OLD(Activity_TorrMain.this, "http://torrentz.eu/verified?f=apps");
-                        gettorrlist.delegate = Activity_TorrMain.this;
-                        gettorrlist.execute();
+                        torrlistreq.delegate = Activity_TorrMain.this;
+                        torrlistreq.fetch("http://torrentr-1038.appspot.com/jresp.jsp?cat=apps", "apps");
                         drawerLayout.closeDrawers();
                         break;
                     case 5:
-                        gettorrlist = new Network_TorrListFetch_OLD(Activity_TorrMain.this, "http://torrentz.eu/verified?f=tv");
-                        gettorrlist.delegate = Activity_TorrMain.this;
-                        gettorrlist.execute();
+                        torrlistreq.delegate = Activity_TorrMain.this;
+                        torrlistreq.fetch("http://torrentr-1038.appspot.com/jresp.jsp?cat=tv", "tv");
+                        drawerLayout.closeDrawers();
+                        break;
+                    case 6:
+                        torrlistreq.delegate = Activity_TorrMain.this;
+                        torrlistreq.fetch("http://torrentr-1038.appspot.com/jresp.jsp?cat=ebooks", "ebooks");
                         drawerLayout.closeDrawers();
                         break;
                     default:
-                        gettorrlist = new Network_TorrListFetch_OLD(Activity_TorrMain.this, "http://torrentz.eu/verified");
-                        gettorrlist.delegate = Activity_TorrMain.this;
-                        gettorrlist.execute();
+                        torrlistreq.delegate = Activity_TorrMain.this;
+                        torrlistreq.fetch("http://torrentr-1038.appspot.com/jresp.jsp?cat=all","all");
                         drawerLayout.closeDrawers();
                         break;
 
@@ -229,30 +224,19 @@ public class Activity_TorrMain extends ActionBarActivity implements Interface_To
 
             }
         });
-       /* TorrList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Intent TorrDetail = new Intent(Activity_TorrMain.this, Activity_TorrDetails.class);
-                TorrDetail.putExtra("torrLink", adapter.getItem(position));
-                startActivity(TorrDetail);
-               // Activity_TorrMain.this.overridePendingTransition(R.anim.slide_in_right,
-                        //R.anim.slide_out_left);
-
-
-            }
-        });*/
     }
 
 
     @Override
-    public void resultTitle(ArrayList<Model_TorrDetail> Model_TorrDetail) {
+    public void TorrList(ArrayList<Model_TorrDetail> Model_TorrDetail) {
         Adapter_TorrListRecycler adapter = new Adapter_TorrListRecycler(this, Model_TorrDetail);
         TorrList.setAdapter(adapter);
         TorrList.setLayoutManager(new LinearLayoutManager(this));
         adapter.notifyDataSetChanged();
-        // if (mSwipeRefreshLayout.isRefreshing()) {
-        //     mSwipeRefreshLayout.setRefreshing(false);
-        // }
+         if (mSwipeRefreshLayout.isRefreshing()) {
+             mSwipeRefreshLayout.setRefreshing(false);
+         }
 
     }
 
@@ -264,6 +248,11 @@ public class Activity_TorrMain extends ActionBarActivity implements Interface_To
     @Override
     public void TorrMagLink(String maglink) {
 
+    }
+
+    @Override
+    public void TorrCatCurr(String cat) {
+    this.currCat=cat;
     }
 
 

@@ -7,9 +7,11 @@ import java.util.ArrayList;
  */
 
 public interface Interface_TorrFunc {
-    void resultTitle(ArrayList<Model_TorrDetail> Model_TorrDetail);
+    void TorrList(ArrayList<Model_TorrDetail> Model_TorrDetail);
 
     void TorrDetail(String[] sites, String[] contents, String[] comments, String[] links);
 
     void TorrMagLink(String maglink);
+
+    void TorrCatCurr(String cat);
 }

@@ -23,17 +23,18 @@ import java.util.ArrayList;
  */
 public class Network_TorrListFetch {
     public Interface_TorrFunc delegate;
-    String url = "http://torrentr-1038.appspot.com/jresp.jsp?cat=ebooks";
-    String site = "null";
     Context mContext;
-    ArrayList<Model_TorrDetail> items = new ArrayList<>();
 
     public Network_TorrListFetch(Context context) {
+
         mContext = context;
+
     }
 
-    public void fetch() {
+    public void fetch(String url,final String cat) {
+
         RequestQueue queue = Volley.newRequestQueue(mContext);
+        final ArrayList<Model_TorrDetail> items = new ArrayList<>();
 
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, (String) null, new Response.Listener<JSONObject>() {
 
@@ -41,8 +42,7 @@ public class Network_TorrListFetch {
             public void onResponse(JSONObject response) {
                 // TODO Auto-generated method stub
                 try {
-                    response = response.getJSONObject("ebooks");
-//                    Toast.makeText(mContext,response.length(),Toast.LENGTH_SHORT).show();
+                    response = response.getJSONObject(cat);
                     for (int i = 0; i < response.length(); i++) {
                         items.add(new Model_TorrDetail(response.getJSONObject(Integer.toString(i)).getString("Name"),
                                 response.getJSONObject(Integer.toString(i)).getJSONObject("Details").getString("Size"),
@@ -51,24 +51,20 @@ public class Network_TorrListFetch {
                                 response.getJSONObject(Integer.toString(i)).getJSONObject("Details").getString("Seeds"),
                                 response.getJSONObject(Integer.toString(i)).getJSONObject("Details").getString("Leech"),
                                 response.getJSONObject(Integer.toString(i)).getJSONObject("Details").getString("Link")));
-                        Log.e("TESSST", response.getJSONObject(Integer.toString(i)).getJSONObject("Details").getString("Size"));
+                       // Log.e("TESSST", response.getJSONObject(Integer.toString(i)).getJSONObject("Details").getString("Size"));
 
                     }
-                    Log.e("JSON", Integer.toString(response.length()));
-                    Log.e("JSON", Integer.toString(items.size()));
+                    Log.e("Response Length", Integer.toString(response.length()));
+                    Log.e("Item Array Length", Integer.toString(items.size()));
 
-                    response = response.getJSONObject("0");
-                    site = response.getString("Name");
-                    //network = response.getString("network");
-                    //System.out.println("Site: " + site + "\nNetwork: " + network);
-                    delegate.resultTitle(items);
+                    delegate.TorrList(items);
+                    delegate.TorrCatCurr(cat);
                 } catch (JSONException e) {
                     Log.e("Torrentr", e.toString());
 
 
                 }
 
-                Toast.makeText(mContext, site, Toast.LENGTH_LONG).show();
             }
         }, new Response.ErrorListener() {
 
@@ -78,8 +74,8 @@ public class Network_TorrListFetch {
                 Log.e("Torrentr", error.toString());
             }
         });
-        jsObjRequest.setRetryPolicy(new DefaultRetryPolicy(5000,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+        jsObjRequest.setRetryPolicy(new DefaultRetryPolicy(3000,
+                1,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         queue.add(jsObjRequest);

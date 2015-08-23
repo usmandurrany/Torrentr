@@ -36,13 +36,18 @@ public class Activity_TorrDetails extends Activity implements Interface_TorrFunc
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_torrdetails);
         String torrLink = getIntent().getStringExtra("torrLink");
-        Network_TorrDetFetch TorrDetail = new Network_TorrDetFetch(this, "http://torrentz.eu" + torrLink);
+
+
+        //Network_TorrDetFetch TorrDetail = new Network_TorrDetFetch(this, "http://torrentz.eu" + torrLink);
+        Network_TorrDetFetch torrDetails = new Network_TorrDetFetch(this);
+        torrDetails.delegate=this;
+        torrDetails.fetch("http://torrentr-1038.appspot.com/jresp.jsp?link="+torrLink,"temp");
         sites = (ListView) findViewById(R.id.dl_sites);
         cCount = (TextView) findViewById(R.id.cmntCount);
 
 
-        TorrDetail.delegate = this;
-        TorrDetail.execute();
+        //TorrDetail.delegate = this;
+        //TorrDetail.execute();
         addListenerOnButton();
         dialogBundle = new Bundle();
 
@@ -71,7 +76,7 @@ public class Activity_TorrDetails extends Activity implements Interface_TorrFunc
 
 
     @Override
-    public void resultTitle(ArrayList<Model_TorrDetail> Model_TorrDetail) {
+    public void TorrList(ArrayList<Model_TorrDetail> Model_TorrDetail) {
 
     }
 
@@ -88,6 +93,11 @@ public class Activity_TorrDetails extends Activity implements Interface_TorrFunc
 
     @Override
     public void TorrMagLink(String maglink) {
+
+    }
+
+    @Override
+    public void TorrCatCurr(String cat) {
 
     }
 

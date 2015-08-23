@@ -68,7 +68,7 @@ public class Adapter_TorrDownLoc extends ArrayAdapter<String> implements Interfa
 
 
     @Override
-    public void resultTitle(ArrayList<Model_TorrDetail> Model_TorrDetail) {
+    public void TorrList(ArrayList<Model_TorrDetail> Model_TorrDetail) {
 
     }
 
@@ -81,5 +81,10 @@ public class Adapter_TorrDownLoc extends ArrayAdapter<String> implements Interfa
     public void TorrMagLink(String maglink) {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(maglink));
         context.startActivity(browserIntent);
+    }
+
+    @Override
+    public void TorrCatCurr(String cat) {
+
     }
 }
