@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,8 +38,20 @@ public class Activity_TorrMain extends ActionBarActivity implements Interface_To
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;
     private ListView leftDrawerList;
-    private ArrayAdapter<String> navigationDrawerAdapter;
-    private String[] leftSliderData = {"All Latest", "Movies", "Music", "Games", "Softwares", "TV Shows", "eBooks","Settings"};
+    private Adapter_TorrNavDrawer navigationDrawerAdapter;
+    //private String[] leftSliderData = {"All Latest", "Movies", "Music", "Games", "Softwares", "TV Shows", "eBooks","Settings"};
+
+    private DataType_TorrNavDrawer[] navDrawerItems = {
+            new DataType_TorrNavDrawer("All Latest",R.drawable.ic_all),
+            new DataType_TorrNavDrawer("Movies",R.drawable.ic_movies),
+            new DataType_TorrNavDrawer("Music",R.drawable.ic_music),
+            new DataType_TorrNavDrawer("Games",R.drawable.ic_games),
+            new DataType_TorrNavDrawer("Softwares",R.drawable.ic_apps),
+            new DataType_TorrNavDrawer("TV Shows",R.drawable.ic_tv),
+            new DataType_TorrNavDrawer("eBooks",R.drawable.ic_ebooks),
+            new DataType_TorrNavDrawer("Settings",R.drawable.ic_settings)
+    };
+
     Network_TorrListFetch torrlistreq = new Network_TorrListFetch(Activity_TorrMain.this);
 
     @Override
@@ -46,6 +59,23 @@ public class Activity_TorrMain extends ActionBarActivity implements Interface_To
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_torrmain);
         nitView();
+
+    }
+
+
+
+    private void nitView() {
+
+        leftDrawerList = (ListView) findViewById(R.id.left_drawer);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+
+
+        navigationDrawerAdapter= new Adapter_TorrNavDrawer(Activity_TorrMain.this,navDrawerItems);
+
+        //navigationDrawerAdapter = new ArrayAdapter<String>(Activity_TorrMain.this, android.R.layout.simple_list_item_1, leftSliderData);
+        leftDrawerList.setAdapter(navigationDrawerAdapter);
 
 
         if (toolbar != null) {
@@ -58,13 +88,14 @@ public class Activity_TorrMain extends ActionBarActivity implements Interface_To
         FABsearch.attachToRecyclerView(TorrList);
 
         torrlistreq.delegate = this;
-        torrlistreq.fetch("http://torrentr-1038.appspot.com/jresp.jsp?cat=all","all");
 
+        torrlistreq.fetch("http://torrentr-1038.appspot.com/jresp.jsp?cat=all", "all");
 
 
         addListenerOnButton();
         initDrawer();
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -77,34 +108,25 @@ public class Activity_TorrMain extends ActionBarActivity implements Interface_To
 
     }
 
-
-    private void nitView() {
-
-        leftDrawerList = (ListView) findViewById(R.id.left_drawer);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-        navigationDrawerAdapter = new ArrayAdapter<String>(Activity_TorrMain.this, android.R.layout.simple_list_item_1, leftSliderData);
-        leftDrawerList.setAdapter(navigationDrawerAdapter);
-
-    }
-
     private void initDrawer() {
+        if(drawerLayout != null) {
 
-        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
+            drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
 
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                super.onDrawerClosed(drawerView);
+                @Override
+                public void onDrawerClosed(View drawerView) {
+                    super.onDrawerClosed(drawerView);
 
-            }
+                }
 
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
+                @Override
+                public void onDrawerOpened(View drawerView) {
+                    super.onDrawerOpened(drawerView);
 
-            }
-        };
-        drawerLayout.setDrawerListener(drawerToggle);
+                }
+            };
+            drawerLayout.setDrawerListener(drawerToggle);
+        }
     }
 
     @Override
@@ -117,6 +139,19 @@ public class Activity_TorrMain extends ActionBarActivity implements Interface_To
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         drawerToggle.onConfigurationChanged(newConfig);
+        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            Log.d("Portrait ", "PPPPPPPPPPPPPPPPP");
+            setContentView(R.layout.activity_torrmain);
+            nitView();
+
+        } else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            Log.d("L", "LLLLLLL");
+
+            //isDrawerLocked = true;
+            setContentView(R.layout.activity_torrmain_landscape);
+            nitView();
+
+        }
     }
 
     @Override
@@ -134,9 +169,9 @@ public class Activity_TorrMain extends ActionBarActivity implements Interface_To
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                String searchQuery=s.replaceAll("\\s", "+");
+                String searchQuery=s.replaceAll("\\s", "-");
                 torrlistreq.delegate = Activity_TorrMain.this;
-                torrlistreq.fetch("http://torrentr-1038.appspot.com/jresp.jsp?search=" + searchQuery, s);
+                torrlistreq.fetch("http://torrentr-1038.appspot.com/jresp.jsp?search=" + searchQuery, searchQuery);
 
                 return false;
             }
@@ -171,7 +206,11 @@ public class Activity_TorrMain extends ActionBarActivity implements Interface_To
         }
         return super.onOptionsItemSelected(item);
     }
+private void closeDrawer(){
+    if(drawerLayout != null)
+        drawerLayout.closeDrawers();
 
+}
     private void addListenerOnButton() {
 
         leftDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -180,47 +219,47 @@ public class Activity_TorrMain extends ActionBarActivity implements Interface_To
                     case 0:
                         torrlistreq.delegate = Activity_TorrMain.this;
                         torrlistreq.fetch("http://torrentr-1038.appspot.com/jresp.jsp?cat=all","all");
-                        drawerLayout.closeDrawers();
+                        closeDrawer();
                         break;
                     case 1:
                         torrlistreq.delegate = Activity_TorrMain.this;
                         torrlistreq.fetch("http://torrentr-1038.appspot.com/jresp.jsp?cat=movies","movies");
-                        drawerLayout.closeDrawers();
+                        closeDrawer();
                         break;
                     case 2:
                         torrlistreq.delegate = Activity_TorrMain.this;
                         torrlistreq.fetch("http://torrentr-1038.appspot.com/jresp.jsp?cat=music","music");
-                        drawerLayout.closeDrawers();
+                        closeDrawer();
                         break;
                     case 3:
                         torrlistreq.delegate = Activity_TorrMain.this;
                         torrlistreq.fetch("http://torrentr-1038.appspot.com/jresp.jsp?cat=games","games");
-                        drawerLayout.closeDrawers();
+                        closeDrawer();
 
                         break;
                     case 4:
                         torrlistreq.delegate = Activity_TorrMain.this;
                         torrlistreq.fetch("http://torrentr-1038.appspot.com/jresp.jsp?cat=apps", "apps");
-                        drawerLayout.closeDrawers();
+                        closeDrawer();
                         break;
                     case 5:
                         torrlistreq.delegate = Activity_TorrMain.this;
                         torrlistreq.fetch("http://torrentr-1038.appspot.com/jresp.jsp?cat=tv", "tv");
-                        drawerLayout.closeDrawers();
+                        closeDrawer();
                         break;
                     case 6:
                         torrlistreq.delegate = Activity_TorrMain.this;
                         torrlistreq.fetch("http://torrentr-1038.appspot.com/jresp.jsp?cat=ebooks", "ebooks");
-                        drawerLayout.closeDrawers();
+                        closeDrawer();
                         break;
                     default:
                         torrlistreq.delegate = Activity_TorrMain.this;
                         torrlistreq.fetch("http://torrentr-1038.appspot.com/jresp.jsp?cat=all","all");
-                        drawerLayout.closeDrawers();
+                        closeDrawer();
                         break;
 
                 }
-                Toast.makeText(Activity_TorrMain.this, navigationDrawerAdapter.getItem(position), Toast.LENGTH_LONG).show();
+               // Toast.makeText(Activity_TorrMain.this, navigationDrawerAdapter.getItem(position), Toast.LENGTH_LONG).show();
 
             }
         });

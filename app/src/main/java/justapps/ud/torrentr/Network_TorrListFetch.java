@@ -1,6 +1,8 @@
 package justapps.ud.torrentr;
 
+import android.app.Activity;
 import android.content.Context;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -35,9 +37,9 @@ public class Network_TorrListFetch {
 
         RequestQueue queue = Volley.newRequestQueue(mContext);
         final ArrayList<Model_TorrDetail> items = new ArrayList<>();
-
+        final SwipeRefreshLayout swipe = (SwipeRefreshLayout)((Activity)mContext).findViewById(R.id.swipe_refresh_layout);
+swipe.setRefreshing(true);
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, (String) null, new Response.Listener<JSONObject>() {
-
             @Override
             public void onResponse(JSONObject response) {
                 // TODO Auto-generated method stub
@@ -59,6 +61,7 @@ public class Network_TorrListFetch {
 
                     delegate.TorrList(items);
                     delegate.TorrCatCurr(cat);
+                    swipe.setRefreshing(false);
                 } catch (JSONException e) {
                     Log.e("Torrentr", e.toString());
 
@@ -74,8 +77,8 @@ public class Network_TorrListFetch {
                 Log.e("Torrentr", error.toString());
             }
         });
-        jsObjRequest.setRetryPolicy(new DefaultRetryPolicy(3000,
-                1,
+        jsObjRequest.setRetryPolicy(new DefaultRetryPolicy(2000,
+                3,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         queue.add(jsObjRequest);

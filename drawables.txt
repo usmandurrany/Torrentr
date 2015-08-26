@@ -1,0 +1,5 @@
+Launcher Icon
+hdpi- 72x72
+mdpi- 48x48
+xhdpi- 96x96
+xxhdpi- 144x144
