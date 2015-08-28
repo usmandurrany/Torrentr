@@ -31,6 +31,11 @@ public class Adapter_TorrDownLoc extends ArrayAdapter<String> implements Interfa
     }
 
     @Override
+    public void TorrListWTags(ArrayList<Model_TorrDetail> Model_TorrDetail, ArrayList<Model_TorrTags> Model_TorrTags) {
+
+    }
+
+    @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);

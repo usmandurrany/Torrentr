@@ -11,7 +11,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp">
+        android:padding="5dp"
+        >
 
         <TextView
             android:id="@+id/title"
@@ -21,6 +22,20 @@
             android:paddingTop="5dp"
             android:text="Medium Text"
             android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <RelativeLayout
+            android:orientation="horizontal"
+            android:id="@+id/torrRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textColor="#ffffffff"
+            android:textIsSelectable="false"
+            android:textSize="15sp"
+            android:layout_toEndOf="@id/title"
+            android:layout_marginTop="8dp"
+            android:gravity="right"></RelativeLayout>
+
 
         <TextView
             android:id="@+id/verified"

@@ -81,6 +81,11 @@ public class Activity_TorrDetails extends Activity implements Interface_TorrFunc
     }
 
     @Override
+    public void TorrListWTags(ArrayList<Model_TorrDetail> Model_TorrDetail, ArrayList<Model_TorrTags> Model_TorrTags) {
+
+    }
+
+    @Override
     public void TorrDetail(String[] sites, String[] contents, String[] comments, String[] links) {
         sitesAdapter = new Adapter_TorrDownLoc(Activity_TorrDetails.this, sites, links);
         cCount.setText(String.valueOf(comments.length));

@@ -37,6 +37,8 @@ public class Network_TorrListFetch {
 
         RequestQueue queue = Volley.newRequestQueue(mContext);
         final ArrayList<Model_TorrDetail> items = new ArrayList<>();
+        final ArrayList<Model_TorrTags> tags = new ArrayList<>();
+
         final SwipeRefreshLayout swipe = (SwipeRefreshLayout)((Activity)mContext).findViewById(R.id.swipe_refresh_layout);
 swipe.setRefreshing(true);
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, (String) null, new Response.Listener<JSONObject>() {
@@ -53,12 +55,29 @@ swipe.setRefreshing(true);
                                 response.getJSONObject(Integer.toString(i)).getJSONObject("Details").getString("Seeds"),
                                 response.getJSONObject(Integer.toString(i)).getJSONObject("Details").getString("Leech"),
                                 response.getJSONObject(Integer.toString(i)).getJSONObject("Details").getString("Link")));
+                        if (cat.equals("movies")) {
+                           // for(int j=0; j<response.getJSONObject(Integer.toString(i)).getJSONArray("Tags").length();j++) {
+                                int j=0;
+                                tags.add(new Model_TorrTags(
+                                        response.getJSONObject(Integer.toString(i)).getJSONArray("Tags").getString(j),
+                                        response.getJSONObject(Integer.toString(i)).getJSONArray("Tags").getString(j++),
+                                        response.getJSONObject(Integer.toString(i)).getJSONArray("Tags").getString(j++),
+                                        response.getJSONObject(Integer.toString(i)).getJSONArray("Tags").getString(j++),
+                                        response.getJSONObject(Integer.toString(i)).getJSONArray("Tags").getString(j++),
+                                        (j >= response.getJSONObject(Integer.toString(i)).getJSONArray("Tags").length()) ? "null" : response.getJSONObject(Integer.toString(i)).getJSONArray("Tags").getString(j++)
+
+                                        )
+                                );
+                           // }
+                        }
                        // Log.e("TESSST", response.getJSONObject(Integer.toString(i)).getJSONObject("Details").getString("Size"));
 
                     }
                     Log.e("Response Length", Integer.toString(response.length()));
                     Log.e("Item Array Length", Integer.toString(items.size()));
-
+                    if (cat.equals("movies"))
+                        delegate.TorrListWTags(items,tags);
+                    else
                     delegate.TorrList(items);
                     delegate.TorrCatCurr(cat);
                     swipe.setRefreshing(false);

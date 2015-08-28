@@ -1,11 +1,15 @@
 package justapps.ud.torrentr;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -16,12 +20,19 @@ import java.util.ArrayList;
 public class Adapter_TorrListRecycler extends RecyclerView.Adapter<Adapter_TorrListRecycler.ViewHolder> {
     // Store a member variable for the users
     private ArrayList<Model_TorrDetail> modeltorrents;
+    private ArrayList<Model_TorrTags> modeltorrtags;
     // Store the context for later use
     private Context context;
 
     // Pass in the context and users array into the constructor
     public Adapter_TorrListRecycler(Context context, ArrayList<Model_TorrDetail> Model_TorrDetail) {
         this.modeltorrents = Model_TorrDetail;
+        this.context = context;
+    }
+    public Adapter_TorrListRecycler(Context context, ArrayList<Model_TorrDetail> Model_TorrDetail,ArrayList<Model_TorrTags> Model_TorrTags) {
+        this.modeltorrents = Model_TorrDetail;
+        this.modeltorrtags = Model_TorrTags;
+
         this.context = context;
     }
 
@@ -36,6 +47,7 @@ public class Adapter_TorrListRecycler extends RecyclerView.Adapter<Adapter_TorrL
     @Override
     public void onBindViewHolder(Adapter_TorrListRecycler.ViewHolder viewHolder, final int i) {
 // Get the data model based on position
+
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -52,6 +64,26 @@ public class Adapter_TorrListRecycler extends RecyclerView.Adapter<Adapter_TorrL
         viewHolder.verify.setText(modeltorrents.get(i).verify);
         viewHolder.seeds.setText(modeltorrents.get(i).seeds);
         viewHolder.leeches.setText(modeltorrents.get(i).leeches);
+        if (modeltorrtags != null) {
+            //viewHolder.year.setText(modeltorrtags.get(i).year);
+            if (viewHolder.TorrRowLayout.findViewById(R.id.tag_year)==null) {
+                TextView tag_year = new TextView(context);
+                tag_year.setId(R.id.tag_year);
+                tag_year.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
+                RelativeLayout.LayoutParams layoutParams =
+                        (RelativeLayout.LayoutParams) tag_year.getLayoutParams();
+                layoutParams.addRule(RelativeLayout.ALIGN_PARENT_END, RelativeLayout.TRUE);
+                layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+                //layoutParams.addRule;
+                // tag_year.setLayoutParams(layoutParams);
+                tag_year.setTextColor(Color.parseColor("#FFFFFF"));
+                tag_year.setBackgroundResource(R.drawable.tags);
+                tag_year.setText(modeltorrtags.get(i).year);
+                tag_year.setPadding(8,4,8,4);
+                viewHolder.TorrRowLayout.addView(tag_year);
+
+            }
+        }
     }
 
     @Override
@@ -61,7 +93,7 @@ public class Adapter_TorrListRecycler extends RecyclerView.Adapter<Adapter_TorrL
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         public TextView title;
@@ -70,6 +102,8 @@ public class Adapter_TorrListRecycler extends RecyclerView.Adapter<Adapter_TorrL
         public TextView verify;
         public TextView seeds;
         public TextView leeches;
+        public RelativeLayout TorrRowLayout;
+
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
@@ -81,6 +115,14 @@ public class Adapter_TorrListRecycler extends RecyclerView.Adapter<Adapter_TorrL
             this.verify = (TextView) itemView.findViewById(R.id.verified);
             this.seeds = (TextView) itemView.findViewById(R.id.seeds);
             this.leeches = (TextView) itemView.findViewById(R.id.leeches);
+
+            this.TorrRowLayout = (RelativeLayout)itemView.findViewById(R.id.torrRow);
+
+
+
+
+            //this.year = (TextView) itemView.findViewById(R.id.tag_year);
+
         }
     }
 
