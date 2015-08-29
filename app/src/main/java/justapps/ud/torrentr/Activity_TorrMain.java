@@ -300,8 +300,8 @@ private void closeDrawer(){
     public void TorrListWTags(ArrayList<Model_TorrDetail> Model_TorrDetail, ArrayList<Model_TorrTags> Model_TorrTags) {
         Adapter_TorrListRecycler adapter = new Adapter_TorrListRecycler(this, Model_TorrDetail,Model_TorrTags);
         TorrList.setAdapter(adapter);
-        TorrList.setLayoutManager(new LinearLayoutManager(this));
-        adapter.notifyDataSetChanged();
+        //TorrList.setLayoutManager(new LinearLayoutManager(this));
+       // adapter.notifyDataSetChanged();
         if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
         }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,19 +20,23 @@ import java.util.ArrayList;
  */
 public class Adapter_TorrListRecycler extends RecyclerView.Adapter<Adapter_TorrListRecycler.ViewHolder> {
     // Store a member variable for the users
-    private ArrayList<Model_TorrDetail> modeltorrents;
-    private ArrayList<Model_TorrTags> modeltorrtags;
+    private  ArrayList<Model_TorrDetail> modeltorrents;
+    private  ArrayList<Model_TorrTags> modeltorrtags;
     // Store the context for later use
     private Context context;
-
+    private TextView temp;
     // Pass in the context and users array into the constructor
-    public Adapter_TorrListRecycler(Context context, ArrayList<Model_TorrDetail> Model_TorrDetail) {
+    public  Adapter_TorrListRecycler(Context context, ArrayList<Model_TorrDetail> Model_TorrDetail) {
         this.modeltorrents = Model_TorrDetail;
         this.context = context;
     }
+
     public Adapter_TorrListRecycler(Context context, ArrayList<Model_TorrDetail> Model_TorrDetail,ArrayList<Model_TorrTags> Model_TorrTags) {
         this.modeltorrents = Model_TorrDetail;
         this.modeltorrtags = Model_TorrTags;
+        //for (int j=0;j<this.modeltorrtags.size();j++){
+          //  Log.e("Model Torr YEAR",this.modeltorrtags.get(j).year);
+       // }
 
         this.context = context;
     }
@@ -41,6 +46,8 @@ public class Adapter_TorrListRecycler extends RecyclerView.Adapter<Adapter_TorrL
         View itemView = LayoutInflater.from(context).
                 inflate(R.layout.list_torrmain, viewGroup, false);
         // Return a new holder instance
+
+
         return new Adapter_TorrListRecycler.ViewHolder(itemView);
     }
 
@@ -65,25 +72,29 @@ public class Adapter_TorrListRecycler extends RecyclerView.Adapter<Adapter_TorrL
         viewHolder.seeds.setText(modeltorrents.get(i).seeds);
         viewHolder.leeches.setText(modeltorrents.get(i).leeches);
         if (modeltorrtags != null) {
-            //viewHolder.year.setText(modeltorrtags.get(i).year);
-            if (viewHolder.TorrRowLayout.findViewById(R.id.tag_year)==null) {
-                TextView tag_year = new TextView(context);
-                tag_year.setId(R.id.tag_year);
-                tag_year.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
-                RelativeLayout.LayoutParams layoutParams =
-                        (RelativeLayout.LayoutParams) tag_year.getLayoutParams();
-                layoutParams.addRule(RelativeLayout.ALIGN_PARENT_END, RelativeLayout.TRUE);
-                layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
-                //layoutParams.addRule;
-                // tag_year.setLayoutParams(layoutParams);
-                tag_year.setTextColor(Color.parseColor("#FFFFFF"));
-                tag_year.setBackgroundResource(R.drawable.tags);
-                tag_year.setText(modeltorrtags.get(i).year);
-                tag_year.setPadding(8,4,8,4);
-                viewHolder.TorrRowLayout.addView(tag_year);
 
-            }
+            viewHolder.tag_year.setText(modeltorrtags.get(i).year);
+
+            /*TextView tag_year = new TextView(context);
+            tag_year.setId(i);
+            tag_year.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
+            RelativeLayout.LayoutParams layoutParams =
+                    (RelativeLayout.LayoutParams) tag_year.getLayoutParams();
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_END, RelativeLayout.TRUE);
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+            //layoutParams.addRule;
+            // tag_year.setLayoutParams(layoutParams);
+            tag_year.setTextColor(Color.parseColor("#FFFFFF"));
+            tag_year.setBackgroundResource(R.drawable.tags);
+            Log.e("TAG YEAR", modeltorrtags.get(i).year);
+            Log.e("VALUE OF I", Integer.toString(i));
+            tag_year.setText(modeltorrtags.get(i).year);
+            tag_year.setPadding(8, 4, 8, 4);
+            viewHolder.TorrRowLayout.addView(tag_year);*/
+        }else{
+            viewHolder.tag_year.setVisibility(View.GONE);
         }
+
     }
 
     @Override
@@ -102,7 +113,7 @@ public class Adapter_TorrListRecycler extends RecyclerView.Adapter<Adapter_TorrL
         public TextView verify;
         public TextView seeds;
         public TextView leeches;
-        public RelativeLayout TorrRowLayout;
+        public TextView tag_year;
 
 
         // We also create a constructor that accepts the entire item row
@@ -116,7 +127,7 @@ public class Adapter_TorrListRecycler extends RecyclerView.Adapter<Adapter_TorrL
             this.seeds = (TextView) itemView.findViewById(R.id.seeds);
             this.leeches = (TextView) itemView.findViewById(R.id.leeches);
 
-            this.TorrRowLayout = (RelativeLayout)itemView.findViewById(R.id.torrRow);
+            this.tag_year = (TextView)itemView.findViewById(R.id.tag_year);
 
 
 

@@ -34,7 +34,6 @@ public class Network_TorrListFetch {
     }
 
     public void fetch(String url,final String cat) {
-
         RequestQueue queue = Volley.newRequestQueue(mContext);
         final ArrayList<Model_TorrDetail> items = new ArrayList<>();
         final ArrayList<Model_TorrTags> tags = new ArrayList<>();
@@ -44,6 +43,7 @@ swipe.setRefreshing(true);
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, (String) null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+
                 // TODO Auto-generated method stub
                 try {
                     response = response.getJSONObject(cat);
@@ -55,28 +55,45 @@ swipe.setRefreshing(true);
                                 response.getJSONObject(Integer.toString(i)).getJSONObject("Details").getString("Seeds"),
                                 response.getJSONObject(Integer.toString(i)).getJSONObject("Details").getString("Leech"),
                                 response.getJSONObject(Integer.toString(i)).getJSONObject("Details").getString("Link")));
+                        int j=0;
                         if (cat.equals("movies")) {
-                           // for(int j=0; j<response.getJSONObject(Integer.toString(i)).getJSONArray("Tags").length();j++) {
-                                int j=0;
-                                tags.add(new Model_TorrTags(
-                                        response.getJSONObject(Integer.toString(i)).getJSONArray("Tags").getString(j),
-                                        response.getJSONObject(Integer.toString(i)).getJSONArray("Tags").getString(j++),
-                                        response.getJSONObject(Integer.toString(i)).getJSONArray("Tags").getString(j++),
-                                        response.getJSONObject(Integer.toString(i)).getJSONArray("Tags").getString(j++),
-                                        response.getJSONObject(Integer.toString(i)).getJSONArray("Tags").getString(j++),
+
+                         // Log.e("Tags Array Length", (response.getJSONObject(Integer.toString(16)).getJSONArray("Tags").getString(j).length() == 0) ? "null" : response.getJSONObject(Integer.toString(16)).getJSONArray("Tags").getString(j));
+
+                            String temp = "null";
+                            if (response.getJSONObject(Integer.toString(i)).getJSONArray("Tags").getString(j).length()!=0){
+                                temp = response.getJSONObject(Integer.toString(i)).getJSONArray("Tags").getString(j);
+                               // Log.e("TEMP VALUE",temp);
+                            }//else
+                                //Log.e("TEMP VALUE", "null");
+
+                            tags.add(new Model_TorrTags(
+                                                /*(response.getJSONObject(Integer.toString(i)).getJSONArray("Tags").getString(j).length()==0) ? "null" : response.getJSONObject(Integer.toString(i)).getJSONArray("Tags").getString(j),
+                                                (j >= response.getJSONObject(Integer.toString(i)).getJSONArray("Tags").length()) ? "null" : response.getJSONObject(Integer.toString(i)).getJSONArray("Tags").getString(j++),
+                                                (j >= response.getJSONObject(Integer.toString(i)).getJSONArray("Tags").length()) ? "null" : response.getJSONObject(Integer.toString(i)).getJSONArray("Tags").getString(j++),
+                                                (j >= response.getJSONObject(Integer.toString(i)).getJSONArray("Tags").length()) ? "null" : response.getJSONObject(Integer.toString(i)).getJSONArray("Tags").getString(j++),
+                                                (j >= response.getJSONObject(Integer.toString(i)).getJSONArray("Tags").length()) ? "null" : response.getJSONObject(Integer.toString(i)).getJSONArray("Tags").getString(j++),
                                         (j >= response.getJSONObject(Integer.toString(i)).getJSONArray("Tags").length()) ? "null" : response.getJSONObject(Integer.toString(i)).getJSONArray("Tags").getString(j++)
+*/
+                                           temp,"null","null","null","null","null"
 
                                         )
                                 );
-                           // }
+
+
+
                         }
                        // Log.e("TESSST", response.getJSONObject(Integer.toString(i)).getJSONObject("Details").getString("Size"));
 
                     }
                     Log.e("Response Length", Integer.toString(response.length()));
                     Log.e("Item Array Length", Integer.toString(items.size()));
-                    if (cat.equals("movies"))
-                        delegate.TorrListWTags(items,tags);
+                    if (cat.equals("movies")) {
+                        Log.e("Tags Array Length", Integer.toString(tags.size()));
+                        delegate.TorrListWTags(items, tags);
+
+
+                    }
                     else
                     delegate.TorrList(items);
                     delegate.TorrCatCurr(cat);
